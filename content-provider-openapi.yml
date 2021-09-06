@@ -133,7 +133,7 @@ paths:
                   externalId: "00000000-0000-0000-0000-000000000000"
   "/users/credential":
     post:
-      operationId: newUserCredential
+      operationId: userCredential
       tags:
         - User
       security:
@@ -163,7 +163,7 @@ paths:
                   jwt: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
   "/users/recover":
     post:
-      operationId: newUserRecover
+      operationId: userRecover
       tags:
         - User
       security:
