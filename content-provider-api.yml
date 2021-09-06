@@ -1,0 +1,312 @@
+openapi: 3.0.3
+info:
+  title: Fpass Content API
+  version: 2.0.0
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-KEY
+    JWTAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    # Common
+    Uuid:
+      description: "Id unico"
+      type: string
+      format: uuid
+      pattern: ^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$
+      maxLength: 36
+    # Types
+    ResourceType:
+      type: string
+      enum:
+        - user
+        - courses.free
+        - courses.live
+        - courses.immersion
+        - display.section
+        - tag
+    EventType:
+      type: string
+      enum:
+        - user.created
+        - user.credential.created
+        - user.credential.recover.created
+    BaseEvent:
+      type: object
+      required:
+        - eventId
+        - eventType
+        - eventDate
+        - resourceId
+        - resourceType
+      properties:
+        eventId:
+          $ref: "#/components/schemas/Uuid"
+        eventType:
+          $ref: "#/components/schemas/EventType"
+        eventDate:
+          type: string
+        resourceId:
+          $ref: "#/components/schemas/Uuid"
+        resourceType:
+          $ref: "#/components/schemas/ResourceType" 
+    UserRecoverMethod:
+      type: string
+      enum:
+        - email
+    Resource:
+      type: object
+      properties:
+        resourceId:
+          $ref: "#/components/schemas/Uuid"
+        resourceType:
+          $ref: "#/components/schemas/ResourceType"
+    # Base Request
+    NewUserRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        data:
+          type: object
+          description: "Informações adcionais"
+          properties:
+            externalId:
+              type: string
+              description: Id externo do usuário
+    UserCredentialRequest:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+    UserRecoverRequest:
+      type: object
+      properties:
+        method:
+          $ref: "#/components/schemas/UserRecoverMethod"
+        value:
+          type: string
+servers:
+  - url: http://localhost:8080
+    description: Local OpenAPI Samples
+  - url: http://localhost:3001
+    description: Local Default Webserver
+paths:
+  # User
+  "/users":
+    post:
+      operationId: newUser
+      tags:
+        - User
+      security:
+       - ApiKeyAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NewUserRequest"
+      responses:
+        "200":
+          description: "Sucesso"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BaseEvent"
+              example:
+                eventId: "00000000-0000-0000-0000-000000000000"
+                eventType: "user.created"
+                eventDate: "2011-10-05T14:48:00.000Z"
+                resourceId: "00000000-0000-0000-0000-000000000000"
+                resourceType: "user"
+                data:
+                  externalId: "00000000-0000-0000-0000-000000000000"
+  "/users/credential":
+    post:
+      operationId: newUserCredential
+      tags:
+        - User
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserCredentialRequest"
+            example:
+              email: "email@email.com"
+              password: "Qwerasdf1R$"
+      responses:
+        "200":
+          description: "Ok"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BaseEvent"
+              example:
+                eventId: "00000000-0000-0000-0000-000000000000"
+                eventType: "user.credential.created"
+                eventDate: "2011-10-05T14:48:00.000Z"
+                resourceId: "00000000-0000-0000-0000-000000000000"
+                resourceType: "user"
+                data:
+                  jwt: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+  "/users/recover":
+    post:
+      operationId: newUserRecover
+      tags:
+        - User
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserRecoverRequest"
+            example:
+              method: "email"
+              value: "email@email.com"   
+      responses:
+        "200":
+          description: "Ok"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BaseEvent"
+              example:
+                eventId: "00000000-0000-0000-0000-000000000000"
+                eventType: "user.credential.recover.created"
+                eventDate: "2011-10-05T14:48:00.000Z"
+                resourceId: "00000000-0000-0000-0000-000000000000"
+                resourceType: "user"
+  # Display
+  "/display/featured":
+    get:
+      operationId: getDisplayFeatured
+      tags:
+        - Display
+      description: "Banners em destaque de cursos"
+      security:
+        - JWTAuth: []
+      responses:
+        "200":
+          description: "Recursos em destaque"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Resource"
+              example:              
+                - resourceId: "00000000-0000-0000-0000-000000000001"
+                  resourceType: "courses.free"
+                  h1: "Curso Orbe.ai: A Escola Infinita de Inteligência Artificial"
+                  h2: "Originals FPASS"
+                  imageUrl: "string"
+                - resourceId: "00000000-0000-0000-0000-000000000002"
+                  resourceType: "courses.live"
+                  h1: "string"
+                  h2: "string"
+                  imageUrl: "string"
+                - resourceId: "00000000-0000-0000-0000-000000000003"
+                  resourceType: "courses.immersion"
+                  h1: "string"
+                  h2: "string"
+                  imageUrl: "string"
+  "/display/resume/lessons":
+    get:
+      operationId: getDisplayResumeLesson
+      tags:
+        - Display
+      description: "Retormar a aula"
+      security:
+        - JWTAuth: []
+      responses:
+        "200":
+          description: "Aulas já iniciadas e não concluídas"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Resource"
+              example:              
+                - resourceId: "00000000-0000-0000-0000-000000000001"
+                  resourceType: "courses.free"
+                  h1: "Design Thinking: Do Insight à Inovação"
+                  h2: "Rezet Hub"
+                  h3: "Módulo 5 - Aula 2"
+                  progress: 0.98
+                  imageUrl: "string"
+                - resourceId: "00000000-0000-0000-0000-000000000002"
+                  resourceType: "courses.free"
+                  h1: "string"
+                  h2: "string"
+                  h3: "string"
+                  progress: 0.90
+                  imageUrl: "string"
+  "/display/sections":
+    get:
+      operationId: getDisplaySections
+      tags:
+        - Display
+      description: "Lista de seções de recursos"
+      security:
+        - JWTAuth: []
+      responses:
+        "200":
+          description: "Lista de seções"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Resource"
+              example:              
+                - resourceId: "00000000-0000-0000-0000-000000000001"
+                  resourceType: "display.section"
+                  h1: "Mastering Business Innovation"
+                - resourceId: "00000000-0000-0000-0000-000000000002"
+                  resourceType: "display.section"
+                  h1: "Empreendedorismo do Futuro"
+  "/display/sections/{id}/resources":
+    get:
+      operationId: getDisplaySectionsResources
+      tags:
+        - Display
+      description: "Lista de seções de recursos"
+      security:
+        - JWTAuth: []
+      parameters:
+        - in: path
+          name: id
+          schema:
+            $ref: "#/components/schemas/Uuid"
+          required: true
+          description: resourceId de um resource com type display.section
+      responses:
+        "200":
+          description: "Lista de seções"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Resource"
+              example:              
+                - resourceId: "00000000-0000-0000-0000-000000000001"
+                  resourceType: "courses.free"
+                  imageUrl: "string"
+                  children:
+                    - resourceId: "00000000-0000-0000-0000-000000000001"
+                      resourseType: "tag"
+                      h1: "Gratuito"
+                - resourceId: "00000000-0000-0000-0000-000000000002"
+                  resourceType: "display.section"
+                  h1: "Empreendedorismo do Futuro"
+                  children:
+                    - resourceId: "00000000-0000-0000-0000-000000000001"
+                      resourseType: "tag"
+                      h1: "Gratuito"              

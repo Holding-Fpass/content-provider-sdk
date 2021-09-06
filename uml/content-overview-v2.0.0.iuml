@@ -1,0 +1,115 @@
+@startuml
+title "Fpass Content Overview"
+
+autonumber
+skinparam MaxMessageSize 100
+
+!$cacheTime = "~15min"
+
+actor User
+
+box Partner
+participant PartnerApp as "App"
+participant PartnerAPI as "API"
+end box
+
+box Fpass
+participant API
+participant WebApp
+end box
+
+group User
+
+group New
+User -> PartnerApp: Email and password
+PartnerApp -> PartnerAPI: Invoke
+PartnerAPI -> API: **POST /users**
+note left
+{
+  ...,
+  data: {
+    externalId: "partnersUserId"
+  }
+}
+end note
+API -> PartnerAPI: Response
+PartnerAPI -> PartnerApp: Response
+
+group 2 Factor Activate
+API -> User: Activation Notification
+User -> WebApp: Activate with token
+end
+
+end
+' New
+
+group Credential
+User -> PartnerApp: Email and password
+PartnerApp -> PartnerAPI: Invoke
+PartnerAPI -> API: **POST /users/credential**
+API -> PartnerAPI: Response
+PartnerAPI -> PartnerApp: Response
+PartnerApp -> PartnerApp: Persist JWT
+end
+
+group Recover
+User -> PartnerApp: Email
+PartnerApp -> PartnerAPI: Invoke
+PartnerAPI -> API: **POST /users/recover**
+API -> PartnerAPI: Response
+PartnerAPI -> PartnerApp: Response
+
+group 2 Factor Recover
+API -> User: Recover Notification
+User -> WebApp: Recover with token
+end
+
+end
+' Recover
+end
+' User
+
+group Display
+User -> PartnerApp: Access Home
+
+group Featured
+PartnerApp -> PartnerAPI: Invoke
+PartnerAPI -> API: **GET /display/featured**
+API -> PartnerAPI: Response
+PartnerAPI -> PartnerApp: Response
+PartnerApp -> PartnerApp: Persist Cache (for $cacheTime)
+PartnerApp -> User: Display Featured
+end
+
+group Sections
+PartnerApp -> PartnerAPI: Invoke
+PartnerAPI -> API: **GET /display/sections**
+API -> PartnerAPI: Response
+loop For each section
+PartnerAPI -> API: **GET /display/sections/{sectionId}/resources**
+API -> PartnerAPI: Response
+end
+PartnerAPI -> PartnerApp: Response
+PartnerApp -> PartnerApp: Persist Cache (for $cacheTime)
+PartnerApp -> User: Display Sections with Resources
+end
+
+group Resume Lessons
+PartnerApp -> PartnerAPI: Invoke
+PartnerAPI -> API: **GET /display/resume/lessons**
+API -> PartnerAPI: Response
+PartnerAPI -> PartnerApp: Response
+PartnerApp -> PartnerApp: Persist Cache (for $cacheTime)
+PartnerApp -> User: Display Resume Lessons
+end
+
+group Cache (next $cacheTime)
+User -> PartnerApp: Reload Page
+PartnerApp -> PartnerApp: Retrive from Cache
+PartnerApp -> User: Display
+end
+
+end
+' Display
+
+@enduml
