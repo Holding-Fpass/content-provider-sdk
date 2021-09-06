@@ -4,13 +4,16 @@ Package de definições para integração para partners orientado ao conteúdo g
 ## Responsability
 Criar meio de acesso a conteúdos que possam ser acessados e utiliados por parceiros (Partners) que são gerado na plataforma (Fpass).
 
-## Overview
-![Overview](https://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/Holding-Fpass/content-provider-sdk/main/uml/content-overview-v2.0.0.iuml)
+## Overview User
+![Content User](https://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/Holding-Fpass/content-provider-sdk/main/uml/content-user-v2.0.0.iuml)
 
 ### User
 A criação de um novo usuário deverá utilizar os campos descritos na documentação da [Content Provider OpenAPI](https://raw.githubusercontent.com/Holding-Fpass/content-provider-sdk/main/content-provider-api.yml).
 
 Um id externo (externalId) poderá ser informado no campo data com a finalidade de ser um identificador do partner na plataforma Fpass.
+
+## Overview Display
+![Content Display](https://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/Holding-Fpass/content-provider-sdk/main/uml/content-display-v2.0.0.iuml)
 
 ### Display
 Para obter dados de exibição de conteúdos e listagens devem ser utilizados os metodos de Display encontrados na Content Provider OpenAPI.
