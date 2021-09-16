@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: Fpass Content API
-  version: 2.0.0
+  version: 2.0.1
 components:
   securitySchemes:
     ApiKeyAuth:
@@ -54,7 +54,7 @@ components:
         resourceId:
           $ref: "#/components/schemas/Uuid"
         resourceType:
-          $ref: "#/components/schemas/ResourceType" 
+          $ref: "#/components/schemas/ResourceType"
     UserRecoverMethod:
       type: string
       enum:
@@ -175,7 +175,7 @@ paths:
               $ref: "#/components/schemas/UserRecoverRequest"
             example:
               method: "email"
-              value: "email@email.com"   
+              value: "email@email.com"
       responses:
         "200":
           description: "Ok"
@@ -205,12 +205,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Resource"
-              example:              
+              example:
                 - resourceId: "00000000-0000-0000-0000-000000000001"
                   resourceType: "courses.free"
                   h1: "Curso Orbe.ai: A Escola Infinita de Inteligência Artificial"
                   h2: "Originals FPASS"
-                  imageUrl: "string"
+                  imageUrl: "https://storage.googleapis.com/content-provider-sdk/examples/featuredResource.png"
                 - resourceId: "00000000-0000-0000-0000-000000000002"
                   resourceType: "courses.live"
                   h1: "string"
@@ -236,21 +236,21 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Resource"
-              example:              
+              example:
                 - resourceId: "00000000-0000-0000-0000-000000000001"
                   resourceType: "courses.free"
                   h1: "Design Thinking: Do Insight à Inovação"
                   h2: "Rezet Hub"
                   h3: "Módulo 5 - Aula 2"
                   progress: 0.98
-                  imageUrl: "string"
+                  imageUrl: "https://storage.googleapis.com/content-provider-sdk/examples/resumeLessonsResource.png"
                 - resourceId: "00000000-0000-0000-0000-000000000002"
                   resourceType: "courses.free"
-                  h1: "string"
-                  h2: "string"
-                  h3: "string"
+                  h1: "Design Thinking: Do Insight à Inovação"
+                  h2: "Rezet Hub"
+                  h3: "Módulo 5 - Aula 3"
                   progress: 0.90
-                  imageUrl: "string"
+                  imageUrl: "https://storage.googleapis.com/content-provider-sdk/examples/resumeLessonsResource.png"
   "/display/sections":
     get:
       operationId: getDisplaySections
@@ -266,7 +266,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Resource"
-              example:              
+              example:
                 - resourceId: "00000000-0000-0000-0000-000000000001"
                   resourceType: "display.section"
                   h1: "Mastering Business Innovation"
@@ -295,18 +295,23 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Resource"
-              example:              
+              example:
                 - resourceId: "00000000-0000-0000-0000-000000000001"
                   resourceType: "courses.free"
-                  imageUrl: "string"
+                  h1: "Empreendedorismo do Futuro 1"
+                  imageUrl: "https://storage.googleapis.com/content-provider-sdk/examples/sessionResource.png"
                   children:
                     - resourceId: "00000000-0000-0000-0000-000000000001"
                       resourseType: "tag"
                       h1: "Gratuito"
                 - resourceId: "00000000-0000-0000-0000-000000000002"
-                  resourceType: "display.section"
-                  h1: "Empreendedorismo do Futuro"
+                  resourceType: "courses.free"
+                  h1: "Empreendedorismo do Futuro 2"
+                  imageUrl: "https://storage.googleapis.com/content-provider-sdk/examples/sessionResource.png"
                   children:
+                    - resourceId: "00000000-0000-0000-0000-000000000002"
+                      resourseType: "tag"
+                      h1: "Lançamento"
                     - resourceId: "00000000-0000-0000-0000-000000000001"
                       resourseType: "tag"
-                      h1: "Gratuito"              
+                      h1: "Gratuito"
