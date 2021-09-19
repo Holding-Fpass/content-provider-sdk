@@ -20,6 +20,10 @@ components:
       format: uuid
       pattern: ^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$
       maxLength: 36
+    Password:
+      description: "Senha"
+      type: string
+      pattern: ^(?=.*[a-z])(?=.*[A-Z]).{6,}$
     # Types
     ResourceType:
       type: string
@@ -75,7 +79,7 @@ components:
         email:
           type: string
         password:
-          type: string
+          $ref: "#/components/schemas/Password"
         data:
           type: object
           description: "Informações adcionais"
@@ -98,10 +102,10 @@ components:
         value:
           type: string
 servers:
+  - url: http://localhost:3001
+    description: Local Development
   - url: http://localhost:8080
     description: Local OpenAPI Samples
-  - url: http://localhost:3001
-    description: Local Default Webserver
 paths:
   # User
   "/users":
@@ -116,8 +120,14 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/NewUserRequest"
+            example:
+              name: "User Name"
+              email: "email@email.com"
+              password: "Qwerasdf1R$"
+              data:
+                externalId: "123456"
       responses:
-        "200":
+        "201":
           description: "Sucesso"
           content:
             application/json:
@@ -131,6 +141,15 @@ paths:
                 resourceType: "user"
                 data:
                   externalId: "00000000-0000-0000-0000-000000000000"
+        "400":
+          description: "Dados incorretos"
+          content:
+            application/json:
+              example:
+                statusCode: 400,
+                message:
+                  - "email must be an email"
+                error: "Bad Request"        
   "/users/credential":
     post:
       operationId: userCredential
