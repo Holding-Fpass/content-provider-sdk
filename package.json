@@ -1,6 +1,6 @@
 {
   "name": "@holding-fpass/content-provider-sdk",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "OpenAPI client for Content Provider SDK",
   "author": "OpenAPI-Generator Contributors",
   "keywords": [
