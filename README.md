@@ -28,7 +28,7 @@ Verificação do _header_ _Autorization_ da _Request_ onde o _Bearer_ contêm um
 - Signing default: RS256
 
 ## Overview Certificate
-![Content Display](https://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/holding-fpass/content-provider-sdk/main/uml/content-certificate-v0.1.0.iuml)
+![Content Display](https://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/holding-fpass/content-provider-sdk/main/uml/content-certificate.v0.1.0.iuml)
 
 ### Certificate
 Para criar um certificado para o usuário chamador.
