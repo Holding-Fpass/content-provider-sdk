@@ -1,0 +1,28 @@
+{
+  "name": "@holding-fpass/content-provider-sdk",
+  "version": "0.1.2",
+  "description": "OpenAPI client for FPASS Backend API (Legacy)",
+  "author": "OpenAPI-Generator Contributors",
+  "keywords": [
+    "axios",
+    "typescript",
+    "openapi-client",
+    "openapi-generator"
+  ],
+  "license": "Unlicense",
+  "main": "./dist/index.js",
+  "typings": "./dist/index.d.ts",
+  "scripts": {
+    "prebuild": "rimraf dist",
+    "build": "npm run prebuild && tsc",
+    "build:publish": "npm run build && npm publish"
+  },
+  "dependencies": {
+    "axios": "^0.21.1"
+  },
+  "devDependencies": {
+    "rimraf": "^3.0.2",
+    "@types/node": "^12.11.5",
+    "typescript": "^3.6.4"
+  }
+}
