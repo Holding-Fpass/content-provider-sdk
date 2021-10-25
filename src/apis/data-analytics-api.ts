@@ -16,28 +16,39 @@ import { Configuration } from '../configuration';
 // Some imports not used depending on template conditions
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS, RequestArgs, BaseAPI, RequiredError } from '../base';
+import { CreateInteractionDto } from '../models';
+import { OmitTypeClass } from '../models';
 /**
- * StatusApi - axios parameter creator
+ * DataAnalyticsApi - axios parameter creator
  * @export
  */
-export const StatusApiAxiosParamCreator = function (configuration?: Configuration) {
+export const DataAnalyticsApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
         /**
          * 
+         * @param {CreateInteractionDto} body 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        appControllerGetStatus: async (options: any = {}): Promise<RequestArgs> => {
-            const localVarPath = `/`;
+        createInteraction: async (body: CreateInteractionDto, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'body' is not null or undefined
+            if (body === null || body === undefined) {
+                throw new RequiredError('body','Required parameter body was null or undefined when calling createInteraction.');
+            }
+            const localVarPath = `/interaction`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, 'https://example.com');
             let baseOptions;
             if (configuration) {
                 baseOptions = configuration.baseOptions;
             }
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
+
+            // authentication bearer required
+
+            localVarHeaderParameter['Content-Type'] = 'application/json';
 
             const query = new URLSearchParams(localVarUrlObj.search);
             for (const key in localVarQueryParameter) {
@@ -49,6 +60,8 @@ export const StatusApiAxiosParamCreator = function (configuration?: Configuratio
             localVarUrlObj.search = (new URLSearchParams(query)).toString();
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            const needsSerialization = (typeof body !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
+            localVarRequestOptions.data =  needsSerialization ? JSON.stringify(body !== undefined ? body : {}) : (body || "");
 
             return {
                 url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
@@ -59,18 +72,19 @@ export const StatusApiAxiosParamCreator = function (configuration?: Configuratio
 };
 
 /**
- * StatusApi - functional programming interface
+ * DataAnalyticsApi - functional programming interface
  * @export
  */
-export const StatusApiFp = function(configuration?: Configuration) {
+export const DataAnalyticsApiFp = function(configuration?: Configuration) {
     return {
         /**
          * 
+         * @param {CreateInteractionDto} body 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async appControllerGetStatus(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await StatusApiAxiosParamCreator(configuration).appControllerGetStatus(options);
+        async createInteraction(body: CreateInteractionDto, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<OmitTypeClass>> {
+            const localVarAxiosArgs = await DataAnalyticsApiAxiosParamCreator(configuration).createInteraction(body, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
                 return axios.request(axiosRequestArgs);
@@ -80,36 +94,38 @@ export const StatusApiFp = function(configuration?: Configuration) {
 };
 
 /**
- * StatusApi - factory interface
+ * DataAnalyticsApi - factory interface
  * @export
  */
-export const StatusApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+export const DataAnalyticsApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
     return {
         /**
          * 
+         * @param {CreateInteractionDto} body 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        appControllerGetStatus(options?: any): AxiosPromise<void> {
-            return StatusApiFp(configuration).appControllerGetStatus(options).then((request) => request(axios, basePath));
+        createInteraction(body: CreateInteractionDto, options?: any): AxiosPromise<OmitTypeClass> {
+            return DataAnalyticsApiFp(configuration).createInteraction(body, options).then((request) => request(axios, basePath));
         },
     };
 };
 
 /**
- * StatusApi - object-oriented interface
+ * DataAnalyticsApi - object-oriented interface
  * @export
- * @class StatusApi
+ * @class DataAnalyticsApi
  * @extends {BaseAPI}
  */
-export class StatusApi extends BaseAPI {
+export class DataAnalyticsApi extends BaseAPI {
     /**
      * 
+     * @param {CreateInteractionDto} body 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof StatusApi
+     * @memberof DataAnalyticsApi
      */
-    public appControllerGetStatus(options?: any) {
-        return StatusApiFp(this.configuration).appControllerGetStatus(options).then((request) => request(this.axios, this.basePath));
+    public createInteraction(body: CreateInteractionDto, options?: any) {
+        return DataAnalyticsApiFp(this.configuration).createInteraction(body, options).then((request) => request(this.axios, this.basePath));
     }
 }
